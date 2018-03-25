@@ -42,3 +42,7 @@ Mycanvas.style.backgroundPosition = NextBpX+"px "+"100%";
 
 canvas方面没有出现太大问题,运用了对象的知识进行编程
 ## 2018年3月26日 02:19:10 sleep
+
+完成了一个小人运动逻辑和背景移动逻辑
+
+以及canvas自适应 在任意手机分辨率下都保持同样效果
