@@ -58,10 +58,11 @@ event.keyCode
     - 直的腿
     - 跨
 
+## 2018年3月27日 19:04:35
 ```js
 //跨
 walk:function(pace){
-	if(/*this.x + pace<=rightKnee.x*/1)
+	if(1)
 	{
 			let square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
 			
@@ -79,7 +80,7 @@ walk:function(pace){
 	}
 //右腿
 walk:function(pace){
-		if(/*this.x + pace<=rightKnee.x*/1)
+		if(1)
 		{
 			let square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
 			
@@ -114,3 +115,155 @@ if(Math.abs(leftKnee.x - rightKnee.x)>=230)
 	return ;
 }
 ```
+
+```js
+//互斥判断
+//跨2.0
+//pc端
+Mycanvas.onmousedown = function(event){
+		if(deviceclass == 'phone')
+			return ;
+		console.log(event);
+		if(jumping)
+		{
+			return;
+		}
+
+		if(!pc_flag)
+		{
+			pc_flag = 1;
+			time = setInterval(function(){
+				leftKnee.walk(5);
+				walking = true;
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					alert("裆裂！");
+					walking = false;
+					reset();
+					DrawJoice();
+					DrawLimb();
+					clearInterval(time);
+					return ;
+					
+				}
+			},16)
+		}
+			
+		
+		else
+		{
+			pc_flag = 0;
+			time = setInterval(function(){
+				rightKnee.walk(5);
+				walking = true;
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					alert("裆裂！");
+					walking = false;
+					reset();
+					DrawJoice();
+					DrawLimb();
+					clearInterval(time);
+					return ;
+				}
+			},16)
+		}
+	}
+
+Mycanvas.onmouseup = function(){
+		walking = false;
+		clearInterval(time);
+}
+//手机端
+Mycanvas.addEventListener("touchstart",function(event){
+		/*console.log("你摁下了");*/
+		if(jumping)
+		{
+			return;
+		}
+		/*console.log(event);*/
+		if(!phone_flag)
+		{
+			phone_flag = 1;
+			/*console.log("点的左边");*/
+			time = setInterval(function(){
+				leftKnee.walk(5);
+				walking = true;
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					alert("裆裂！");
+					walking = false;
+					reset();
+					DrawJoice();
+					DrawLimb();
+					clearInterval(time);
+					return ;
+					
+				}
+			},16)
+		}
+			
+		
+		else
+		{
+			phone_flag = 0;
+			/*console.log("点的右边");*/
+			time = setInterval(function(){
+				rightKnee.walk(5);
+				walking = true;
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					alert("裆裂！");
+					walking = false;
+					reset();
+					DrawJoice();
+					DrawLimb();
+					clearInterval(time);
+					return ;
+				}
+			},16)
+		}
+})
+Mycanvas.addEventListener("touchend",function(){
+	/*console.log("你拿起了");*/
+	walking = false;
+		clearInterval(time);
+})
+//跳
+let jump = function(){
+	let Vy = -20;
+	let ay = 1;
+	let tmpWaistY = waist.y;
+	var jump_time = setInterval(function(){
+		jumping = true;
+		waist.y += Vy;
+		leftKnee.y += Vy;
+		rightKnee.y += Vy;
+		Vy += ay;
+		if(waist.y + Vy > tmpWaistY)
+		{
+			waist.y = tmpWaistY;
+			jumping = false;
+			clearInterval(jump_time);
+		}
+		DrawJoice();
+		DrawLimb();
+	},16)
+}
+```
+
+```js
+//平台判断，手机端执行touchstart/touchend事件
+if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    deviceclass = 'phone';
+}
+else {
+   	deviceclass = 'pc';
+}
+```
+
+### 2018年3月27日 23:50:52
+目前手机端遇到的问题：
+手机端touch事件检测不到点击位置，现在的模式是左右脚交替，如果未来没有发现API的话，就设计按钮，对按钮设置touch事件用来控制左右脚移动。(pc端点左半边屏幕跨左脚，点右半边跨右脚)
+
+点击过快会出现不中止的自动执行跨步函数（互斥判断还有bug）
