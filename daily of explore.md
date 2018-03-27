@@ -1,6 +1,4 @@
-# Project-minimarason
-
-# 迷你马拉松小游戏开发日志笔记
+﻿# 迷你马拉松小游戏开发日志笔记
 
 ## 2018年3月25日 23:27:39 first day
 
@@ -41,10 +39,78 @@ Mycanvas.style.backgroundPosition = NextBpX+"px "+"100%";
 ```
 
 canvas方面没有出现太大问题,运用了对象的知识进行编程
-
-完成了一个小人运动逻辑和背景移动逻辑
-
-以及canvas自适应 在任意手机分辨率下都保持同样效果
 ## 2018年3月26日 02:19:10 sleep
 
+## 2018年3月26日 07:57:59
 
+判断方向键
+```
+event.keyCode
+```
+
+## 2018年3月26日 20:38:05
+
+与设计商量后的结果
+
+对象 
+1. 除了腿之外的部分(定死)
+2. 腿
+    - 直的腿
+    - 跨
+
+```js
+//跨
+walk:function(pace){
+	if(/*this.x + pace<=rightKnee.x*/1)
+	{
+			let square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
+			
+			waist.y = this.y - Math.sqrt(square_c - (waist.x - this.x - pace)*(waist.x - this.x - pace));
+			
+			//勾股定理
+			this.x += pace;
+			rightKnee.x -= pace;
+
+			move(pace);
+			DrawJoice();
+			DrawLimb();
+		}
+
+	}
+//右腿
+walk:function(pace){
+		if(/*this.x + pace<=rightKnee.x*/1)
+		{
+			let square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
+			
+			waist.y = this.y - Math.sqrt(square_c - (waist.x - this.x - pace)*(waist.x - this.x - pace));
+			
+			//勾股定理
+			this.x += pace;
+			leftKnee.x -= pace;
+
+			move(pace);
+			DrawJoice();
+			DrawLimb();
+		}
+
+	}
+function move(pace){
+  	NextBpX -= pace;
+	Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
+}
+
+```
+
+```
+//死亡判定之腿伸太长
+if(Math.abs(leftKnee.x - rightKnee.x)>=230)
+{
+	alert("裆裂！");
+	reset();
+	DrawJoice();
+	DrawLimb();
+	clearInterval(time);
+	return ;
+}
+```
