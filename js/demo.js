@@ -272,7 +272,7 @@ Mycanvas.onmousedown = function(event){
 			return;
 		}
 
-		if(!pc_flag)
+		if(/*!pc_flag*/event.x < Mycanvas.width * 0.5)
 		{
 			pc_flag = 1;
 			time = setInterval(function(){
