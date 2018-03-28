@@ -262,8 +262,159 @@ else {
 }
 ```
 
-### 2018年3月27日 23:50:52 sleep
+### 2018年3月27日 23:50:52
 目前手机端遇到的问题：
 手机端touch事件检测不到点击位置，现在的模式是左右脚交替，如果未来没有发现API的话，就设计按钮，对按钮设置touch事件用来控制左右脚移动。(pc端点左半边屏幕跨左脚，点右半边跨右脚)
 
 点击过快会出现不中止的自动执行跨步函数（互斥判断还有bug）
+
+
+### 2018年3月28日 23:29:33
+
+```js
+//走到一定路程时候出现检测点
+if(NextBpX - 0.5* Mycanvas.width <= -1000) //走过1000px时候
+	{
+		console.log("检查点1");
+		if(checkpoint.flag == 0) //如果检测点未出现在画面内
+		{
+			checkpoint.__init(); // 初始化检测点位置 在画面右侧
+	    	checkpoint.flag = 1; // 标记检测点在画面内
+		}
+		if(checkpoint.x < 0) //如果检测点出了画面
+		{
+		    checkpoint.x = undefined //暂时标记为未定义，减少绘制量
+			checkpoint.flag = 0; //标记检测点在画面外
+			NextBpX = 0; //移动回起点
+		}
+			
+	}
+//检测点的对象
+let checkpoint = {
+	flag:0,
+	__init:function(){
+		this.x = Mycanvas.width,
+		this.y = 0.4 * Mycanvas.height,
+		this.width = 30,
+		this.height = 50
+	},
+	move:function(pace){
+		this.x -= pace;
+	},
+	draw:function(){
+		let ctx = Mycanvas.getContext('2d');
+		/*clearcanvas();*/
+		ctx.fillStyle = '#000';
+		ctx.fillRect(this.x,this.y,this.width,this.height);
+
+		
+	}
+}
+```
+
+```js
+//走路3.0
+//左脚
+Mycanvas.addEventListener("touchstart",function(event){
+		/*console.log("你摁下了");*/
+		if(jumping)
+		{
+			return;
+		}
+		/*console.log(event);*/
+		if(!phone_flag)
+		{
+			phone_flag = 1;
+			/*console.log("点的左边");*/
+			time = setInterval(function(){
+				clearcanvas();
+				console.log(checkpoint.x);
+				
+				leftKnee.walk(5);
+				walking = true;
+				if(checkpoint.flag == 1)
+				{
+					console.log("绘制检查点");
+					checkpoint.move(5);
+					checkpoint.draw();
+				
+				}
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					/*alert("裆裂！");*/
+					walking = false;
+					clearcanvas();
+					reset();
+					DrawJoice();
+					DrawLimb();
+					checkpoint.draw();
+					clearInterval(time);
+					return ;
+					
+				}
+			},16)
+		}
+			
+		
+		else
+		{
+			phone_flag = 0;
+			/*console.log("点的右边");*/
+			time = setInterval(function(){
+				clearcanvas();
+				if(checkpoint.flag == 1) //仅当应该出现在页面内的时候再绘制，减少绘制量
+				{
+					checkpoint.move(5); 
+					checkpoint.draw();
+				}
+				
+				rightKnee.walk(5);
+				walking = true;
+				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
+				{
+					/*alert("裆裂！");*/
+					walking = false;
+					clearcanvas();
+					reset();
+					DrawJoice();
+					DrawLimb();
+					checkpoint.draw(); //裆裂了检测点还要继续啊
+					clearInterval(time);
+					return ;
+				}
+			},16)
+		}
+})
+
+
+Mycanvas.addEventListener("touchend",function(){
+	/*console.log("你拿起了");*/
+	console.log(NextBpX);
+	if(NextBpX - 0.5* Mycanvas.width <= -1000)
+	{
+		console.log("检查点1");
+		if(checkpoint.flag == 0)
+		{
+			checkpoint.__init();
+			checkpoint.flag = 1;
+		}
+		
+		if(checkpoint.x < 0)
+		{
+			checkpoint.x = undefined;
+			checkpoint.flag = 0;
+			NextBpX = 0;
+		}
+			
+	}
+	walking = false;
+		clearInterval(time);
+})
+```
+
+### 2018年3月28日 23:51:04
+
+1. 昨天的第二个bug只要不使用alert突发终止函数就不会出现问题
+2. 现觉得所有的draw其实都可以合并为一个函数
+3. 不在画面里的东西只要给其坐标定位undefined就可以保证即便调用其绘制函数也可以不绘制。
+4. 明天尝试 碰撞判断 和 飞行物障碍绘制
