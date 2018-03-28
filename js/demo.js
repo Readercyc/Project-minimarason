@@ -136,6 +136,7 @@ let rightKnee = {
 		
 		this.ctx.beginPath();
 		this.ctx.arc(this.x,this.y,this.r,0,2*Math.PI,1);
+		this.ctx.fillStyle = "#000";
 		this.ctx.fill();
 		this.ctx.closePath();
 	},
@@ -146,7 +147,6 @@ let rightKnee = {
 			waist.y = this.y - Math.sqrt(square_c - (waist.x - this.x - pace)*(waist.x - this.x - pace));
 			this.x += pace;
 			leftKnee.x -= pace;
-
 			move(pace);
 			DrawJoice();
 			DrawLimb();
@@ -164,7 +164,7 @@ let paper_plane = {
 		function(){
 			console.log("!!!");
 			let ctx = Mycanvas.getContext('2d');
-			ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height);
+	
 			ctx.fillRect(this.x,this.y,this.width,this.width);
 			ctx.fillStyle = "#000";
 			/*this.x -= this.Vx;*/
@@ -175,7 +175,31 @@ let paper_plane = {
 	}
 
 }
+let checkpoint = {
+	flag:0,
+	__init:function(){
+		this.x = Mycanvas.width,
+		this.y = 0.4 * Mycanvas.height,
+		this.width = 30,
+		this.height = 50
+	},
+	move:function(pace){
+		this.x -= pace;
+	},
+	draw:function(){
+		let ctx = Mycanvas.getContext('2d');
+		/*clearcanvas();*/
+		ctx.fillStyle = '#000';
+		ctx.fillRect(this.x,this.y,this.width,this.height);
 
+		
+
+	}
+}
+function clearcanvas(){
+	let ctx = Mycanvas.getContext('2d');
+	ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height);
+}
 function reset(){
 	head.__init(0.5*Mycanvas.width,0.2*Mycanvas.height,50);
 	leftElbow.__init(-100,100,10);
@@ -187,8 +211,8 @@ function reset(){
 }
 
 function DrawJoice(){
+	
 	let ctx = Mycanvas.getContext('2d');
-	ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height)
 	/*head.draw();
 	leftElbow.draw();
 	rightElbow.draw();*/
@@ -198,7 +222,9 @@ function DrawJoice(){
 }
 
 function DrawLimb(){
+
 	let ctx = Mycanvas.getContext('2d');
+
 	/*ctx.moveTo(head.x,head.y+head.r);
 	ctx.lineTo(leftElbow.x,leftElbow.y);
 	ctx.moveTo(head.x,head.y+head.r);
@@ -237,6 +263,7 @@ let jump = function(){
 			jumping = false;
 			clearInterval(jump_time);
 		}
+		clearcanvas();
 		DrawJoice();
 		DrawLimb();
 	},16)
@@ -263,6 +290,7 @@ window.onload = function(){
 var time= null;
 let pc_flag = 0;
 let phone_flag = 0;
+let checkpoint_flag = 0;
 Mycanvas.onmousedown = function(event){
 		if(deviceclass == 'phone')
 			return ;
@@ -276,12 +304,14 @@ Mycanvas.onmousedown = function(event){
 		{
 			pc_flag = 1;
 			time = setInterval(function(){
+				clearcanvas();
 				leftKnee.walk(5);
 				walking = true;
 				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 				{
 					alert("裆裂！");
 					walking = false;
+					clearcanvas();
 					reset();
 					DrawJoice();
 					DrawLimb();
@@ -301,6 +331,7 @@ Mycanvas.onmousedown = function(event){
 				walking = true;
 				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 				{
+					clearcanvas();
 					alert("裆裂！");
 					walking = false;
 					reset();
@@ -337,12 +368,21 @@ Mycanvas.addEventListener("touchstart",function(event){
 			phone_flag = 1;
 			/*console.log("点的左边");*/
 			time = setInterval(function(){
+				clearcanvas();
+				checkpoint.move(5);
+				checkpoint.draw();
 				leftKnee.walk(5);
 				walking = true;
+				if(checkpoint.flag == 1)
+				{
+					console.log("绘制检查点");
+				
+				}
 				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 				{
-					alert("裆裂！");
+					/*alert("裆裂！");*/
 					walking = false;
+					clearcanvas();
 					reset();
 					DrawJoice();
 					DrawLimb();
@@ -359,12 +399,16 @@ Mycanvas.addEventListener("touchstart",function(event){
 			phone_flag = 0;
 			/*console.log("点的右边");*/
 			time = setInterval(function(){
+				clearcanvas();
+				checkpoint.move(5);
+				checkpoint.draw();
 				rightKnee.walk(5);
 				walking = true;
 				if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 				{
-					alert("裆裂！");
+					/*alert("裆裂！");*/
 					walking = false;
+					clearcanvas();
 					reset();
 					DrawJoice();
 					DrawLimb();
@@ -374,11 +418,29 @@ Mycanvas.addEventListener("touchstart",function(event){
 			},16)
 		}
 })
+
+
 Mycanvas.addEventListener("touchend",function(){
 	/*console.log("你拿起了");*/
+	console.log(NextBpX);
+	if(NextBpX - 0.5* Mycanvas.width <= -1000)
+	{
+		console.log("检查点1");
+		if(checkpoint.flag == 0)
+			checkpoint.__init();
+		checkpoint.flag = 1;
+		if(checkpoint.x < 0)
+		{
+			checkpoint.flag = 0;
+			NextBpX = 0;
+		}
+			
+	}
 	walking = false;
 		clearInterval(time);
 })
 /*ah1 = (a-2)h2
 
 h2 = h1 - ah/a-2 */
+
+
