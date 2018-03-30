@@ -3,7 +3,7 @@
 ## 2018年3月25日 23:27:39 first day
 
 获取浏览器宽高
-``` js
+```js
 document.body.clientWidth ==> BODY对象宽度
 document.body.clientHeight ==> BODY对象高度
 document.documentElement.clientWidth ==> 可见区域宽度
@@ -412,9 +412,30 @@ Mycanvas.addEventListener("touchend",function(){
 })
 ```
 
-### 2018年3月28日 23:51:04
+### 2018年3月28日 23:51:04 today end
 
 1. 昨天的第二个bug只要不使用alert突发终止函数就不会出现问题
 2. 现觉得所有的draw其实都可以合并为一个函数
 3. 不在画面里的东西只要给其坐标定位undefined就可以保证即便调用其绘制函数也可以不绘制。
 4. 明天尝试 碰撞判断 和 飞行物障碍绘制
+
+### 2018年3月30日 20:37:18
+
+1. 合并了所有的Draw函数，不间断绘制
+```
+function Draw(){
+	clearcanvas(); //整合canvas
+	DrawJoice();
+	Drawplane();
+	DrawLimb();
+	checkpoint.draw();
+}
+```
+
+2. 碰撞检测（飞行物和检查点）基本完成
+
+3. 明天完成陷阱和时光胶囊的设计，新腿脚的移动方式（妈耶还要培训）
+
+
+
+
