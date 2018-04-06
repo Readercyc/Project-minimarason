@@ -6,13 +6,13 @@ window.onresize = function(){
 	DrawLimb();
 	
 }
-let  jumping = false;
-let walking = false;
+var  jumping = false;
+var walking = false;
 
 
 
 function clearcanvas(){
-	let ctx = Mycanvas.getContext('2d');
+	var ctx = Mycanvas.getContext('2d');
 	ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height);
 }
 function reset(){
@@ -28,12 +28,12 @@ function reset(){
 }
 function DrawJoice(){
 	
-	let ctx = Mycanvas.getContext('2d');
+	var ctx = Mycanvas.getContext('2d');
 	/*head.draw();
 	/*leftElbow.draw();
 	rightElbow.draw();*/
 	/*waist.draw();*/
-leftKnee.draw();
+	leftKnee.draw();
 	rightKnee.draw();
 	/*paper_plane.draw();*/
 }
@@ -41,7 +41,7 @@ leftKnee.draw();
 function DrawLimb(){
 
 	
-	let ctx = Mycanvas.getContext('2d');
+	var ctx = Mycanvas.getContext('2d');
 	/*ctx.moveTo(head.x,head.y+head.r);
 	ctx.lineTo(leftElbow.x,leftElbow.y);
 	ctx.moveTo(head.x,head.y+head.r);
@@ -66,34 +66,55 @@ function DrawLimb(){
 	ctx.closePath();
 }
 
-/*let NextBpX = 0;
-function move(pace){
-  	NextBpX -= pace;
-	Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
-	for(let i = 0 ; i < checkpoint.position.length ;i++)
+function left_walk(){
+	if(NextBpX <= -11380)
+		return ;
+	move(2.5);
+	leftKnee.walk(2.5);
+	time = requestAnimationFrame(left_walk);
+	walking = true;
+	if(Math.abs(leftKnee.x - rightKnee.x)>=100)
 	{
-		if(NextBpX>=checkpoint.position[i] && NextBpX <checkpoint.position[i+1])
-		{
-			checkpoint.flag = i;
-		}
+					
+		dead();
+		NextBpX = checkpoint.position[checkpoint.flag];
+		Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
+		walking = false;
+		reset();
+		cancelAnimationFrame(time);
+		return ;
 	}
-
-}*/
-
-
-let plane = function(){
-	/*setInterval(Drawplane,16)*/
 }
+function right_walk(){
+	if(NextBpX <= -11380)
+		return ;
+	move(2.5);
+	rightKnee.walk(2.5);
+	time = requestAnimationFrame(right_walk);
+	walking = true;
+	if(Math.abs(leftKnee.x - rightKnee.x)>=100)
+	{
+				
+		dead();
+		NextBpX = checkpoint.position[checkpoint.flag];
+		Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
+		walking = false;
+		reset();
+		cancelAnimationFrame(time);
+		return ;
+	}
+}
+
 function Draw(){
 	clearcanvas();
 	DrawJoice();
 	DrawLimb();
 	paper_plane.draw();
-	let ctx = Mycanvas.getContext('2d');
-	let img = new Image();
+	var ctx = Mycanvas.getContext('2d');
+	var img = new Image();
 	img.src = "./img/g_body.png";
 	ctx.drawImage(img,head.x-head.r,waist.y-waist.r-0.2*Mycanvas.height,54,100);
 
-	/*time_capsule.draw();*/
+	globalID=requestAnimationFrame(Draw);  
 }
 

@@ -1,28 +1,43 @@
-const Mycanvas = document.getElementById('Mycanvas');
-var drawtime
+var Mycanvas = document.getElementById('Mycanvas');
+var body = $("body");
+var drawtime;
 window.onload = function()
 {
+	$('audio')[0].play();
 	
-	Mycanvas.height = document.body.clientHeight;
-	Mycanvas.width = document.body.clientWidth ;
-	var mask = document.getElementById('#mask');
-	var start = document.getElementById('#start');
-	reset();
+	/*var mask = document.getElementById('#mask');
+	var start = document.getElementById('#start');*/
+	$("#mask p").hide();
+	$("#start").show();
+	$(".hint").show();
+
 	
-	if(Mycanvas.width <= 450)
-	{
-		$("#mask").show();
-		$("#mask p").show();
-		$("#start").hide();
-		$(".hint").hide();
-	}
-	else
+	 var width = document.documentElement.clientWidth;
+ 	 var height =  document.documentElement.clientHeight;
+ 	 Mycanvas.height = document.body.clientHeight;
+	 Mycanvas.width = document.body.clientWidth ;
+  	 if( width < height ){
+
+      console.log(width + " " + height);
+      $print =  $('body');
+      $print.width(height);
+      $print.height(width);
+      $print.css('top',  (height-width)/2 );
+      $print.css('left',  0-(height-width)/2 );
+      $print.css('transform' , 'rotate(90deg)');
+      $print.css('transform-origin' , '50% 50%');
+      $print.css('-webikt-transform' , 'rotate(90deg)');
+      $print.css('-webkit-transform-origin' , '50% 50%');
+      Mycanvas.height = document.body.clientHeight;
+	  Mycanvas.width = document.body.clientWidth ;
+ 	}
+	/*else
 	{	
 		$("#mask p").hide();
 		$("#start").show();
 		$(".hint").show();
 	}
-	window.onresize = function(){
+	/*window.onresize = function(){
 		Mycanvas.height = document.body.clientHeight;
 		Mycanvas.width = document.body.clientWidth ;
 		console.log(Mycanvas.width);
@@ -41,46 +56,48 @@ window.onload = function()
 			$("#start").show();
 			$(".hint").show();
 		}
-	}
+	}*/
 	
 }
 
 
 $("#start").click(function(){
+		reset();
 	$("#mask").fadeOut(500);
 	if(NextBpX >= -11400)
-		drawtime = setInterval(Draw,16);
+		drawtime = requestAnimationFrame(Draw);
 	else{
-		Draw();
+		cancelAnimationFrame(Draw);
 	}
 })
 
-/*var bgposition = 0;
-function move(){
-	bgposition -= 5;
-	Mycanvas.style.backgroundPosition = bgposition +"px "+"100%";
-}*/
 
 var NextBpX = 0;
 function move(pace){
   	NextBpX -= pace;
 	Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
-	for(let i = 0 ; i < checkpoint.position.length ;i++)
+	$('canvas').css("-webkit-background-position",NextBpX +"px "+"100%");
+	if(NextBpX <= -11380)
 	{
-		if(NextBpX<=checkpoint.position[i] && NextBpX >checkpoint.position[i+1] && checkpoint.flag != i)
+		/*clearInterval(drawtime);
+		clearInterval(time);*/
+		cancelAnimationFrame(drawtime);
+		$("#sign").fadeIn(3000);
+		$('.hint').fadeOut();
+		$('#left_button').fadeOut();
+		$('#right_button').fadeOut();
+	}
+	for(var i = 0 ; i < checkpoint.position.length ;i++)
+	{
+		if(NextBpX<checkpoint.position[i] && NextBpX >checkpoint.position[i+1] && checkpoint.flag != i)
 		{
 			checkpoint.flag = i;
 			paper_plane.Vx ++;
 		}
+		else if(NextBpX<=-10500)
+			checkpoint.flag = 10;
 	}
-	if(NextBpX <= -11400)
-	{
-		clearInterval(drawtime);
-		clearInterval(time);
-		$("#sign").fadeIn(3000);
-		$('#left_button').fadeOut();
-		$('#right_button').fadeOut();
-	}
+	
 }
 
 

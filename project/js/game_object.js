@@ -1,6 +1,6 @@
 var leftbutton = document.getElementById('left_button');
 var rightbutton = document.getElementById('right_button');
-let head = {
+var head = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = x;
@@ -16,7 +16,7 @@ let head = {
 	},
 }
 
-let leftElbow = {
+var leftElbow = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = head.x + x;
@@ -33,7 +33,7 @@ let leftElbow = {
 
 }
 
-let rightElbow = {
+var rightElbow = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = head.x + x;
@@ -49,7 +49,7 @@ let rightElbow = {
 	}
 }
 
-let waist = {
+var waist = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = head.x;
@@ -65,7 +65,7 @@ let waist = {
 	}
 }
 
-let leftKnee = {
+var leftKnee = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = waist.x + x;
@@ -76,8 +76,8 @@ let leftKnee = {
 		
 		this.ctx.beginPath();
 		this.ctx.arc(this.x,this.y,this.r,0,2*Math.PI,1);
-		let ctx = Mycanvas.getContext('2d')
-		let img = new Image();
+		var ctx = Mycanvas.getContext('2d')
+		var img = new Image();
 		img.src = "./img/left_shoe.png";
 		ctx.drawImage(img,leftKnee.x-leftKnee.r-3,leftKnee.y-2);
 		this.ctx.closePath();
@@ -85,7 +85,7 @@ let leftKnee = {
 	walk:function(pace){
 		if(/*this.x + pace<=rightKnee.x*/1)
 		{
-			let square_c = (head.x - this.x)*(head.x - this.x) + (this.y - head.y)*(this.y - head.y);
+			var square_c = (head.x - this.x)*(head.x - this.x) + (this.y - head.y)*(this.y - head.y);
 			head.y = this.y - Math.sqrt(square_c - (head.x - this.x - pace)*(head.x - this.x - pace));
 
 			square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
@@ -97,12 +97,13 @@ let leftKnee = {
 			leftElbow.x -= pace;
 			rightElbow.x += pace;
 			
+			
 		}
 
 	}
 }
 
-let rightKnee = {
+var rightKnee = {
 	ctx:Mycanvas.getContext('2d'),
 	__init:function(x,y,r){
 		this.x = waist.x +  x;
@@ -113,8 +114,8 @@ let rightKnee = {
 		
 		this.ctx.beginPath();
 		this.ctx.arc(this.x,this.y,this.r,0,2*Math.PI,1);
-		let ctx = Mycanvas.getContext('2d')
-		let img = new Image();
+		var ctx = Mycanvas.getContext('2d')
+		var img = new Image();
 		img.src = "./img/right_shoe.png";
 		ctx.drawImage(img,rightKnee.x-rightKnee.r+4,rightKnee.y-2);
 		this.ctx.closePath();
@@ -122,7 +123,7 @@ let rightKnee = {
 	walk:function(pace){
 		if(/*this.x + pace<=rightKnee.x*/1)
 		{
-			let square_c = (head.x - this.x)*(head.x - this.x) + (this.y - head.y)*(this.y - head.y);
+			var square_c = (head.x - this.x)*(head.x - this.x) + (this.y - head.y)*(this.y - head.y);
 			head.y = this.y - Math.sqrt(square_c - (head.x - this.x - pace)*(head.x - this.x - pace));
 			square_c = (waist.x - this.x)*(waist.x - this.x) + (this.y - waist.y)*(this.y - waist.y);
 			waist.y = this.y - Math.sqrt(square_c - (waist.x - this.x - pace)*(waist.x - this.x - pace));
@@ -132,25 +133,26 @@ let rightKnee = {
 			leftElbow.x += pace;
 			rightElbow.x -= pace;
 			
+	
 			
 		}
 
 	}
 }
-let paper_plane = {
-	y :head.x,
+var paper_plane = {
+	y :Mycanvas.height-260,
 	Vx : 4 ,
 	height:30,
 	width:70,
 	touch:0,
 	__init:function(){
 		this.x = Mycanvas.width;
-		this.y = head.y;
+		this.y = Mycanvas.height-260;
 	},
 	draw:function(){
-			let img = new Image();
+			var img = new Image();
 			img.src = './img/plane.png'
-			let ctx = Mycanvas.getContext('2d');
+			var ctx = Mycanvas.getContext('2d');
 			ctx.drawImage(img,this.x,this.y,this.width,this.height);
 			
 			
@@ -165,22 +167,26 @@ let paper_plane = {
 
 				if(this.y<=leftKnee.y+leftKnee.r || this.y<=rightKnee.y+rightKnee.r)
 				{
+					if(NextBpX <= -11380)
+							return ;
 					NextBpX = checkpoint.position[checkpoint.flag];
 					Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
 					console.log("你撞到了纸飞机");
+					reset()
+					dead();
 				}
 			}
 			this.x -= this.Vx;
 	}
 
 }
-let checkpoint = {
+var checkpoint = {
 	flag:0,
 	touch:false,
 	position:[0,-900,-1700,-2800,-3800,-4800,-6800,-7600,-8500,-9400,-10500]
 }
 
-let time_capsule = {
+var time_capsule = {
 	touch:0,
 	__init:function(){
 		this.x = Mycanvas.width + 200;
@@ -193,7 +199,7 @@ let time_capsule = {
 		this.x -= pace;
 	},
 	draw:function(){
-		let ctx = Mycanvas.getContext('2d');
+		var ctx = Mycanvas.getContext('2d');
 		/*clearcanvas();*/
 		if(this.x<-3000)
 		{
