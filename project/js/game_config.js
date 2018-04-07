@@ -8,7 +8,6 @@ window.onload = function()
 	
 	/*var mask = document.getElementById('#mask');
 	var start = document.getElementById('#start');*/
-	$("#mask p").hide();
 	$("#start").show();
 	$(".hint").show();
 
