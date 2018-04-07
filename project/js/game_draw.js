@@ -16,7 +16,7 @@ function clearcanvas(){
 	ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height);
 }
 function reset(){
-	head.__init(0.2*Mycanvas.width,Mycanvas.height-260,20);
+	head.__init(0.2*Mycanvas.width,Math.max(Mycanvas.height-260,0.2*Mycanvas.height),20);
 	leftElbow.__init(-30,70,10);
 	rightElbow.__init(30,70,10);
 	waist.__init(0,0.2*Mycanvas.height,10);

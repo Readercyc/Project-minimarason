@@ -3,6 +3,7 @@ var body = $("body");
 var drawtime;
 window.onload = function()
 {
+	console.log(window)
 	$('audio')[0].play();
 	
 	/*var mask = document.getElementById('#mask');
@@ -31,32 +32,62 @@ window.onload = function()
       Mycanvas.height = document.body.clientHeight;
 	  Mycanvas.width = document.body.clientWidth ;
  	}
+ 	else if( width > height ){
+		    console.log(width + " " + height);
+		    $print =  $('body');
+		    $print.width(width);
+		    $print.height(height);
+		    $print.css('top',  0);
+		    $print.css('left',  0 );
+		    $print.css('transform' , 'rotate(0deg)');
+		    $print.css('transform-origin' , '50% 50%');
+		    $print.css('-webikt-transform' , 'rotate(0deg)');
+		    $print.css('-webkit-transform-origin' , '50% 50%');
+
+		    Mycanvas.height = document.body.clientHeight;
+			Mycanvas.width = document.body.clientWidth ;
+	 	}
 	/*else
 	{	
 		$("#mask p").hide();
 		$("#start").show();
 		$(".hint").show();
-	}
-	/*window.onresize = function(){
-		Mycanvas.height = document.body.clientHeight;
-		Mycanvas.width = document.body.clientWidth ;
-		console.log(Mycanvas.width);
-			reset();
-		if(Mycanvas.width <= 450)
-		{
-
-			$("#mask").show();
-			$("#mask p").show();
-			$("#start").hide();
-			$(".hint").hide();
-		}
-		else
-		{
-			$("#mask p").hide();
-			$("#start").show();
-			$(".hint").show();
-		}
 	}*/
+	window.onresize = function(){
+		var width = document.documentElement.clientWidth;
+ 		var height =  document.documentElement.clientHeight;
+ 		Mycanvas.height = document.body.clientHeight;
+		Mycanvas.width = document.body.clientWidth ;
+	  	if( width > height ){
+		    console.log(width + " " + height);
+		    $print =  $('body');
+		    $print.width(width);
+		    $print.height(height);
+		    $print.css('top',  0);
+		    $print.css('left',  0 );
+		    $print.css('transform' , 'rotate(0deg)');
+		    $print.css('transform-origin' , '50% 50%');
+		    $print.css('-webikt-transform' , 'rotate(0deg)');
+		    $print.css('-webkit-transform-origin' , '50% 50%');
+
+		    Mycanvas.height = document.body.clientHeight;
+			Mycanvas.width = document.body.clientWidth ;
+	 	}
+	 	else if( width < height ){
+	      console.log(width + " " + height);
+	      $print =  $('body');
+	      $print.width(height);
+	      $print.height(width);
+	      $print.css('top',  (height-width)/2 );
+	      $print.css('left',  0-(height-width)/2 );
+	      $print.css('transform' , 'rotate(90deg)');
+	      $print.css('transform-origin' , '50% 50%');
+	      $print.css('-webikt-transform' , 'rotate(90deg)');
+	      $print.css('-webkit-transform-origin' , '50% 50%');
+	      Mycanvas.height = document.body.clientHeight;
+		  Mycanvas.width = document.body.clientWidth ;
+ 		}
+	}
 	
 }
 

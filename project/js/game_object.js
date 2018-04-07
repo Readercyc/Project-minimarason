@@ -140,14 +140,14 @@ var rightKnee = {
 	}
 }
 var paper_plane = {
-	y :Mycanvas.height-260,
+	y :Math.max(Mycanvas.height-260,0.2*Mycanvas.height),
 	Vx : 4 ,
 	height:30,
 	width:70,
 	touch:0,
 	__init:function(){
 		this.x = Mycanvas.width;
-		this.y = Mycanvas.height-260;
+		this.y = Math.max(Mycanvas.height-260,0.2*Mycanvas.height);
 	},
 	draw:function(){
 			var img = new Image();
