@@ -19,16 +19,16 @@ function jump_change(){
 	Vy += ay;
 	if(waist.y + Vy > tmpWaistY)
 	{
-		waist.y = tmpWaistY;
+		reset(1);
 		jumping = false;
-		cancelAnimationFrame(jump_time);
+		cancelAnimationFrame(jump);
 		return ;
 	}
 	requestAnimationFrame(jump_change);
 }
 function jump(){
-	Vy = -20;
-	ay = 1;
+	Vy = -40;
+	ay = 1.5;
 	tmpWaistY = waist.y;
 	jump_time = requestAnimationFrame(jump_change);
 	

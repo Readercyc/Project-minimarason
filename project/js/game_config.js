@@ -122,6 +122,7 @@ function move(pace){
 		if(NextBpX<checkpoint.position[i] && NextBpX >checkpoint.position[i+1] && checkpoint.flag != i)
 		{
 			checkpoint.flag = i;
+			console.log("越来越快啦！！！")
 			paper_plane.Vx ++;
 		}
 		else if(NextBpX<=-10500)

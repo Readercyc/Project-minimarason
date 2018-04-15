@@ -15,7 +15,7 @@ function clearcanvas(){
 	var ctx = Mycanvas.getContext('2d');
 	ctx.clearRect(0,0,Mycanvas.width,Mycanvas.height);
 }
-function reset(){
+function reset(x){
 	head.__init(0.2*Mycanvas.width,Math.max(Mycanvas.height-260,0.2*Mycanvas.height),20);
 	leftElbow.__init(-30,70,10);
 	rightElbow.__init(30,70,10);
@@ -23,16 +23,18 @@ function reset(){
 	leftKnee.__init(-waist.r,90,10);
 	rightKnee.__init(waist.r,90,10);
 	time_capsule.__init();
-	paper_plane.__init();
+	if(x!=1)
+		paper_plane.__init();
+	
 
 }
 function DrawJoice(){
 	
 	var ctx = Mycanvas.getContext('2d');
 	/*head.draw();
-	/*leftElbow.draw();
-	rightElbow.draw();*/
-	/*waist.draw();*/
+	leftElbow.draw();
+	rightElbow.draw();
+	waist.draw();*/
 	leftKnee.draw();
 	rightKnee.draw();
 	/*paper_plane.draw();*/
@@ -69,11 +71,11 @@ function DrawLimb(){
 function left_walk(){
 	if(NextBpX <= -11380)
 		return ;
-	move(2.5);
-	leftKnee.walk(2.5);
+	move(1+checkpoint.flag*0.2);
+	leftKnee.walk(1+checkpoint.flag*0.2);
 	time = requestAnimationFrame(left_walk);
 	walking = true;
-	if(Math.abs(leftKnee.x - rightKnee.x)>=100)
+	if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 	{
 					
 		dead();
@@ -88,11 +90,11 @@ function left_walk(){
 function right_walk(){
 	if(NextBpX <= -11380)
 		return ;
-	move(2.5);
-	rightKnee.walk(2.5);
+	move(1+checkpoint.flag*0.2);
+	rightKnee.walk(1+checkpoint.flag*0.2);
 	time = requestAnimationFrame(right_walk);
 	walking = true;
-	if(Math.abs(leftKnee.x - rightKnee.x)>=100)
+	if(Math.abs(leftKnee.x - rightKnee.x)>=180)
 	{
 				
 		dead();

@@ -144,10 +144,10 @@ var paper_plane = {
 	Vx : 4 ,
 	height:30,
 	width:70,
-	touch:0,
 	__init:function(){
 		this.x = Mycanvas.width;
 		this.y = Math.max(Mycanvas.height-260,0.2*Mycanvas.height);
+		this.touch = 0;
 	},
 	draw:function(){
 			var img = new Image();
@@ -159,21 +159,23 @@ var paper_plane = {
 			if(this.x<-1000)
 			{
 				this.__init();
-				this.touch = 0;
+				
 			}
 			if(((this.x <= leftKnee.x + leftKnee.r )|| (this.x <= leftKnee.x - leftKnee.x)|| (this.x <= rightKnee.x + rightKnee.r )|| (this.x <= rightKnee.x - rightKnee.r) )&& this.touch == 0)
 			{
 				this.touch = 1;
 
-				if(this.y<=leftKnee.y+leftKnee.r || this.y<=rightKnee.y+rightKnee.r)
+				if((this.y<=leftKnee.y+leftKnee.r || this.y<=rightKnee.y+rightKnee.r)&&this.y >= head.y - head.r)
 				{
 					if(NextBpX <= -11380)
 							return ;
 					NextBpX = checkpoint.position[checkpoint.flag];
 					Mycanvas.style.backgroundPosition = NextBpX +"px "+"100%";
 					console.log("你撞到了纸飞机");
-					reset()
+					cancelAnimationFrame(jump);
 					dead();
+					reset();
+					
 				}
 			}
 			this.x -= this.Vx;
@@ -234,5 +236,4 @@ var time_capsule = {
 
 	}
 }
-
 
